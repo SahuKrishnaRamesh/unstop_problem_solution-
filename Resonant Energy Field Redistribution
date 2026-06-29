@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+long long min_operations(int n, const vector<int>& E, const vector<int>& T) {
+    vector<long long> diff(n);
+
+    for (int i = 0; i < n; i++)
+        diff[i] = (long long)T[i] - E[i];
+
+    long long ans = 0;
+    int i = 0;
+
+    while (i < n) {
+        if (diff[i] == 0) {
+            i++;
+            continue;
+        }
+
+        int sign = (diff[i] > 0) ? 1 : -1;
+
+        ans += llabs(diff[i]);
+        long long prev = llabs(diff[i]);
+        i++;
+
+        while (i < n && diff[i] != 0 &&
+               ((diff[i] > 0) ? 1 : -1) == sign) {
+
+            long long cur = llabs(diff[i]);
+            if (cur > prev)
+                ans += (cur - prev);
+
+            prev = cur;
+            i++;
+        }
+    }
+
+    return ans;
+}
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<int> E(n), T(n);
+
+    for (int i = 0; i < n; i++)
+        cin >> E[i];
+
+    for (int i = 0; i < n; i++)
+        cin >> T[i];
+
+    cout << min_operations(n, E, T);
+
+    return 0;
+}
